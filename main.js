@@ -47,10 +47,53 @@
 
   var cur = 0;
   var picks = new Array(15).fill(null);
+  var transitioning = false;
+
+  function forceReflow(el) {
+    void el.offsetWidth;
+  }
+
+  function hideEl(el) {
+    el.className = '';
+    el.style.opacity = '0';
+    forceReflow(el);
+  }
+
+  function fadeInEl(el) {
+    el.className = 'anim-in';
+    el.style.opacity = '';
+  }
+
+  function fadeOutEl(el) {
+    return new Promise(function (resolve) {
+      el.className = 'anim-out';
+      setTimeout(resolve, 1200);
+    });
+  }
+
+  function loadImage(el, src) {
+    return new Promise(function (resolve) {
+      hideEl(el);
+      el.onload = function () {
+        el.onload = null;
+        el.onerror = null;
+        resolve();
+      };
+      el.onerror = function () {
+        el.onload = null;
+        el.onerror = null;
+        resolve();
+      };
+      el.src = src;
+    });
+  }
 
   function fitCanvas() {
-    var s = Math.min(window.innerWidth / W, window.innerHeight / H);
-    canvas.style.transform = 'scale(' + s + ')';
+    var vv = window.visualViewport;
+    var vw = vv ? vv.width : window.innerWidth;
+    var vh = vv ? vv.height : window.innerHeight;
+    var s = Math.min(vw / W, vh / H);
+    canvas.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
   }
 
   function go(name) {
@@ -111,30 +154,38 @@
   }
 
   async function playTransition() {
+    if (transitioning) return;
+    transitioning = true;
+
     go('transition');
     var img = document.getElementById('phone-content');
     var cap = document.getElementById('phone-caption');
 
-    img.src = 'photos/编号6.png';
-    img.className = 'anim-in';
-    cap.className = 'anim-in';
+    hideEl(img);
+    img.removeAttribute('src');
+    hideEl(cap);
+
+    await loadImage(img, 'photos/编号6.png');
+    fadeInEl(img);
+    fadeInEl(cap);
 
     await delay(10000);
 
-    img.className = 'anim-out';
-    cap.className = 'anim-out';
-    await delay(1200);
+    await fadeOutEl(img);
+    await fadeOutEl(cap);
 
-    img.src = 'photos/编号7.png';
-    img.className = 'anim-in';
-    cap.className = '';
-    cap.style.opacity = '0';
+    hideEl(img);
+    img.removeAttribute('src');
+    hideEl(cap);
+
+    await loadImage(img, 'photos/编号7.png');
+    fadeInEl(img);
 
     await delay(5000);
 
-    img.className = 'anim-out';
-    await delay(1200);
+    await fadeOutEl(img);
 
+    transitioning = false;
     openResult(score());
   }
 
@@ -182,6 +233,12 @@
     video.removeAttribute('src');
     cur = 0;
     picks.fill(null);
+    transitioning = false;
+    var img = document.getElementById('phone-content');
+    var cap = document.getElementById('phone-caption');
+    hideEl(img);
+    img.removeAttribute('src');
+    hideEl(cap);
     document.getElementById('result-hero').classList.remove('is-hidden');
     document.getElementById('result-detail').classList.remove('is-visible');
     go('home');
@@ -221,4 +278,9 @@
   buildDots();
   fitCanvas();
   window.addEventListener('resize', fitCanvas);
+  window.addEventListener('orientationchange', fitCanvas);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', fitCanvas);
+    window.visualViewport.addEventListener('scroll', fitCanvas);
+  }
 })();
