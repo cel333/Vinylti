@@ -2,7 +2,7 @@
   'use strict';
 
   var W = 1080, H = 1920;
-  var OPT_TOP = [768, 862, 956, 1050];
+  var OPT_TOP = [768, 888, 1008, 1128];
   var OPT_LABEL = ['A', 'B', 'C', 'D'];
   var PRIORITY = ['S1','S2','S3','S4','S5','S6','S7','S8','S9','S10'];
 
