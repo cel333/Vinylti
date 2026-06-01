@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Vinylti — in indie</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="viewport">
+    <div id="canvas">
+
+      <!-- 首页 -->
+      <section id="home" class="screen is-active">
+        <img class="layer-bg" src="photos/编号1.jpg" alt="">
+        <div class="enter-wrap">
+          <button type="button" id="enter-btn" aria-label="进入测试">
+            <img src="photos/编号2.png" alt="ENTER">
+          </button>
+        </div>
+        <nav class="social-nav" aria-label="社交媒体">
+          <a href="https://v.douyin.com/6kvk5-B3ThU/?utm_campaign=client_share&app=aweme&utm_medium=ios&tt_from=more&utm_source=more" target="_blank" rel="noopener" style="top:1802px;left:191px">点我点我</a>
+          <a href="https://b23.tv/jkbm0LH" target="_blank" rel="noopener" style="top:1802px;left:567px">点我点我</a>
+          <a href="https://xhslink.com/m/5APajkLMi2D" target="_blank" rel="noopener" style="top:1802px;left:868px">点我点我</a>
+        </nav>
+      </section>
+
+      <!-- 测试界面 -->
+      <section id="quiz" class="screen">
+        <img class="layer-bg" src="photos/编号3.jpg" alt="">
+        <p class="quiz-stem" id="quiz-stem"></p>
+        <div class="quiz-opts" id="quiz-opts"></div>
+        <div class="nav-row">
+          <button type="button" class="nav-btn nav-back" id="nav-back">往前回想</button>
+          <button type="button" class="nav-btn nav-forward" id="nav-forward">然后呢...</button>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-track"></div>
+          <div class="progress-dots" id="progress-dots"></div>
+        </div>
+      </section>
+
+      <!-- 转场页 -->
+      <section id="transition" class="screen">
+        <img class="layer-bg" src="photos/编号5.jpg" alt="">
+        <div class="phone-screen">
+          <img id="phone-content" src="photos/编号6.png" alt="">
+        </div>
+        <p class="phone-caption" id="phone-caption">你按下了中间的按钮</p>
+      </section>
+
+      <!-- 结果页 -->
+      <section id="result" class="screen">
+        <video id="result-video" class="result-bg-video" playsinline loop muted></video>
+        <div class="result-panel" id="result-panel">
+          <div class="result-hero" id="result-hero">
+            <h1 class="result-scene" id="result-scene"></h1>
+            <button type="button" class="pull-trigger" id="pull-trigger" aria-label="上拉查看解析">
+              <span class="pull-arrow">▲</span>
+            </button>
+          </div>
+          <div class="result-detail" id="result-detail">
+            <div class="result-mask-box">
+              <p class="result-body" id="result-body"></p>
+            </div>
+            <p class="result-tagline">也许你的生活需要更多音乐，Vinyl可以帮助你</p>
+            <button type="button" class="btn-home" id="btn-home">返回首页再次测试</button>
+          </div>
+        </div>
+        <button type="button" class="btn-sound" id="btn-sound" hidden>点击开启声音</button>
+      </section>
+
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
