@@ -270,10 +270,14 @@ html, body {
   inset: 0;
   z-index: 2;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
+}
+
+.result-panel.is-expanded {
+  overflow-y: auto;
 }
 
 .result-hero {

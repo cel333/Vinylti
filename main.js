@@ -157,9 +157,16 @@
     if (transitioning) return;
     transitioning = true;
 
+    var resultData = score();
+
     go('transition');
     var img = document.getElementById('phone-content');
     var cap = document.getElementById('phone-caption');
+    var video = document.getElementById('result-video');
+
+    video.src = resultData.video;
+    video.muted = true;
+    video.load();
 
     hideEl(img);
     img.removeAttribute('src');
@@ -186,7 +193,16 @@
     await fadeOutEl(img);
 
     transitioning = false;
-    openResult(score());
+    openResult(resultData);
+  }
+
+  function startResultVideo(video, soundBtn) {
+    video.muted = true;
+    video.play().then(function () {
+      soundBtn.hidden = false;
+    }).catch(function () {
+      soundBtn.hidden = false;
+    });
   }
 
   function openResult(data) {
@@ -194,33 +210,54 @@
 
     var video = document.getElementById('result-video');
     var soundBtn = document.getElementById('btn-sound');
+    var panel = document.getElementById('result-panel');
 
     document.getElementById('result-scene').textContent = data.title;
     document.getElementById('result-body').textContent = data.body;
 
-    document.getElementById('result-panel').classList.remove('is-expanded');
+    panel.classList.remove('is-expanded');
+    panel.scrollTop = 0;
 
-    video.src = data.video;
+    soundBtn.hidden = true;
+    soundBtn.textContent = '点击开启声音';
+
+    if (!video.src || video.src.indexOf(data.video) === -1) {
+      video.src = data.video;
+    }
+    video.loop = true;
     video.muted = true;
     video.load();
-    soundBtn.hidden = true;
 
-    video.play().then(function () {
-      video.muted = false;
-      return video.play();
-    }).catch(function () {
-      soundBtn.hidden = false;
+    function tryPlay() {
+      startResultVideo(video, soundBtn);
+    }
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        if (video.readyState >= 2) {
+          tryPlay();
+        } else {
+          video.oncanplay = function () {
+            video.oncanplay = null;
+            tryPlay();
+          };
+        }
+      });
     });
 
     soundBtn.onclick = function () {
       video.muted = false;
       video.play();
       soundBtn.hidden = true;
+      panel.scrollTop = 0;
     };
   }
 
   function revealDetail() {
-    document.getElementById('result-panel').classList.add('is-expanded');
+    var panel = document.getElementById('result-panel');
+    if (panel.classList.contains('is-expanded')) return;
+    panel.classList.add('is-expanded');
+    panel.scrollTop = 0;
   }
 
   function resetAll() {
@@ -261,11 +298,21 @@
 
   var panel = document.getElementById('result-panel');
   var touchY = 0;
+  var touchActive = false;
   panel.addEventListener('touchstart', function (e) {
+    if (panel.classList.contains('is-expanded')) return;
     touchY = e.touches[0].clientY;
+    touchActive = true;
   }, { passive: true });
   panel.addEventListener('touchmove', function (e) {
-    if (touchY - e.touches[0].clientY > 50) revealDetail();
+    if (!touchActive || panel.classList.contains('is-expanded')) return;
+    if (touchY - e.touches[0].clientY > 50) {
+      touchActive = false;
+      revealDetail();
+    }
+  }, { passive: true });
+  panel.addEventListener('touchend', function () {
+    touchActive = false;
   }, { passive: true });
 
   document.getElementById('btn-home').addEventListener('click', resetAll);
@@ -276,6 +323,5 @@
   window.addEventListener('orientationchange', fitCanvas);
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', fitCanvas);
-    window.visualViewport.addEventListener('scroll', fitCanvas);
   }
 })();
