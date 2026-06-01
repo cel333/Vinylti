@@ -6,23 +6,31 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+html {
+  height: 100%;
+  height: -webkit-fill-available;
+}
+
 html, body {
   width: 100%;
   height: 100%;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
   overflow: hidden;
-  background: #000;
+  background: #fff;
   font-family: 'Vinyl', sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
 #viewport {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   height: 100dvh;
+  height: -webkit-fill-available;
   overflow: hidden;
+  background: #fff;
 }
 
 #canvas {
@@ -107,7 +115,7 @@ html, body {
   left: 204px;
   width: 820px;
   font-family: 'Vinyl', sans-serif;
-  font-size: 36px;
+  font-size: 38px;
   line-height: 1.45;
   color: #111;
   z-index: 3;
@@ -125,7 +133,7 @@ html, body {
   width: 880px;
   padding: 6px 12px;
   font-family: 'Vinyl', sans-serif;
-  font-size: 30px;
+  font-size: 32px;
   line-height: 1.5;
   color: #111;
   background: transparent;
@@ -259,22 +267,36 @@ html, body {
   position: absolute;
   inset: 0;
   z-index: 2;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
 }
 
 .result-hero {
-  position: absolute;
-  inset: 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 0 60px;
-  transition: opacity 0.45s ease;
+  min-height: 100%;
+  transition: min-height 0.45s ease, padding 0.45s ease;
 }
 
-.result-hero.is-hidden {
+.result-panel.is-expanded .result-hero {
+  flex: none;
+  min-height: auto;
+  padding: 100px 60px 28px;
+  justify-content: flex-start;
+}
+
+.result-panel.is-expanded .pull-trigger {
   opacity: 0;
+  height: 0;
+  margin: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -295,6 +317,7 @@ html, body {
   border: none;
   cursor: pointer;
   animation: bob 2s ease-in-out infinite;
+  transition: opacity 0.3s ease, height 0.3s ease, margin 0.3s ease;
 }
 
 .pull-arrow {
@@ -310,23 +333,17 @@ html, body {
   50%       { transform: translateY(-12px); }
 }
 
-/* 详细解析：页面居下、中轴对齐 */
 .result-detail {
-  position: absolute;
-  inset: 0;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
   padding: 0 48px 220px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.45s ease;
 }
 
-.result-detail.is-visible {
-  opacity: 1;
-  pointer-events: auto;
+.result-panel.is-expanded .result-detail {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .result-mask-box {
