@@ -152,7 +152,7 @@ html, body {
 /* 导航按钮：中轴对称，进度条上方 */
 .nav-row {
   position: absolute;
-  top: 1600px;
+  top: 1580px;
   left: 0;
   width: 1080px;
   display: flex;
@@ -163,11 +163,11 @@ html, body {
 }
 
 .nav-btn {
-  min-width: 200px;
-  height: 64px;
-  padding: 0 28px;
+  min-width: 220px;
+  height: 76px;
+  padding: 0 32px;
   font-family: 'Vinyl', sans-serif;
-  font-size: 30px;
+  font-size: 45px;
   color: #fff;
   background: #111;
   border: none;
